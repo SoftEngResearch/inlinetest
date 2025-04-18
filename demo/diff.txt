@@ -1,0 +1,38 @@
+diff --git a/pom.xml b/pom.xml
+index 7c4fb2a..53a9ce2 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -77,6 +77,11 @@
+       <version>3.12.4</version>
+       <scope>test</scope>
+     </dependency>
++    <dependency>
++      <groupId>org.inlinetest</groupId>
++      <artifactId>inlinetest</artifactId>
++      <version>1.0</version>
++    </dependency>
+   </dependencies>
+   <build>
+     <pluginManagement>
+diff --git a/src/main/java/com/amazon/sqs/javamessaging/AmazonSQSExtendedClient.java b/src/main/java/com/amazon/sqs/javamessaging/AmazonSQSExtendedClient.java
+index 7520706..1fdd5f4 100644
+--- a/src/main/java/com/amazon/sqs/javamessaging/AmazonSQSExtendedClient.java
++++ b/src/main/java/com/amazon/sqs/javamessaging/AmazonSQSExtendedClient.java
+@@ -76,6 +76,9 @@ import software.amazon.payloadoffloading.S3BackedPayloadStore;
+ import software.amazon.payloadoffloading.S3Dao;
+ import software.amazon.payloadoffloading.Util;
+ 
++import org.inlinetest.ITest;
++import static org.inlinetest.ITest.itest;
++import static org.inlinetest.ITest.group;
+ 
+ /**
+  * Amazon SQS Extended Client extends the functionality of Amazon SQS client.
+@@ -883,6 +886,7 @@ public class AmazonSQSExtendedClient extends AmazonSQSExtendedClientBase impleme
+     private String getOrigReceiptHandle(String receiptHandle) {
+         int secondOccurence = receiptHandle.indexOf(SQSExtendedClientConstants.S3_KEY_MARKER,
+                 receiptHandle.indexOf(SQSExtendedClientConstants.S3_KEY_MARKER) + 1);
++        itest().given(receiptHandle, "1FOc=-..s3Key..-y*-@T-..s3Key..-").checkEq(secondOccurence, 21);
+         return receiptHandle.substring(secondOccurence + SQSExtendedClientConstants.S3_KEY_MARKER.length());
+     }
+ 
