@@ -24,6 +24,10 @@ import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.VoidType;
+import com.github.javaparser.ast.expr.LambdaExpr;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.expr.ClassExpr;
+import com.github.javaparser.ast.expr.NullLiteralExpr;
 
 public class InlineTest {
     public String testName;
@@ -35,6 +39,7 @@ public class InlineTest {
                             // assignment stmt
     public List<Node> assertions;
     public List<Node> junitAssertions;
+    public Expression exceptionExpected;
 
     public InlineTest() {
         this.givens = new ArrayList<Node>();
@@ -65,6 +70,7 @@ public class InlineTest {
         for (Node n : assertions) {
             sb.append(n.toString() + "\n");
         }
+        // TODO: Support exception-handling for the assert approach
         sb.append("}\n");
         return sb.toString();
     }
@@ -238,6 +244,31 @@ public class InlineTest {
                 }
             }
         }
+
+        if (exceptionExpected != null) {
+            LambdaExpr lambda = new LambdaExpr();
+            lambda.setEnclosingParameters(true);
+            lambda.setBody(block);
+
+            MethodCallExpr methodCallExpr = null;
+            // If the exception expected is null, use assertDoesNotThrow instead of assertThrows
+            if (exceptionExpected instanceof NullLiteralExpr) {
+                methodCallExpr = new MethodCallExpr(
+                    null,
+                    Constant.ASSERT_DOES_NOT_THROW,
+                    NodeList.nodeList(lambda)
+                );
+            } else {
+                methodCallExpr = new MethodCallExpr(
+                    null,
+                    Constant.ASSERT_THROWS,
+                    NodeList.nodeList((ClassExpr) exceptionExpected, lambda)
+                );
+            }
+            BlockStmt newBody = new BlockStmt().addStatement(methodCallExpr);
+            block = (BlockStmt) newBody.clone();
+        }
+
         MethodDeclaration method = new MethodDeclaration();
 
         method.setName(testCaseName).setType(new VoidType()).setBody(block).addMarkerAnnotation("Test");

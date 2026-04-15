@@ -22,10 +22,13 @@ public class Constant {
     final static String CHECK_EQ = "checkEq";
     final static String CHECK_TRUE = "checkTrue";
     final static String CHECK_FALSE = "checkFalse";
+    final static String EXPECT = "expect";
     final static String GIVEN = "given";
     final static String GROUP = "group";
     final static String ASSERT_TRUE = "assertTrue";
     final static String ASSERT_FALSE = "assertFalse";
+    final static String ASSERT_THROWS = "assertThrows";
+    final static String ASSERT_DOES_NOT_THROW = "assertDoesNotThrow";
     final static List<String> PRIMITIVE_TYPES = Arrays.asList("int", "long", "double", "float", "boolean", "char",
             "byte", "short",
             "String", "java.lang.String", "int[]", "long[]", "double[]", "float[]", "boolean[]", "char[]", "byte[]",

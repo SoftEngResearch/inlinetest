@@ -638,6 +638,13 @@ public class InlineTestRunnerSourceCode {
                             AssignExpr.Operator.ASSIGN);
                 }
                 inlineTest.givens.add(assignExpr);
+            } else if (methodCall.getName().asString().equals(Constant.EXPECT)) {
+                // e.g., expect(Exception.class) or expect(null)
+                List<Expression> args = methodCall.getArguments();
+                if (args.size() != 1) {
+                    throw new RuntimeException(Constant.EXPECT + " should have 1 argument");
+                }
+                inlineTest.exceptionExpected = args.get(0);
             }
             parseInlineTest(methodCall.getScope().get(), inlineTest, symbolTable);
         } else if (node instanceof ExpressionStmt) {
