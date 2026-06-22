@@ -203,9 +203,9 @@ public class InlineTest {
                                 List<Expression> arguments = ((MethodCallExpr) expression).getArguments();
                                 for (Expression argument : arguments) {
                                     if (targetExpression instanceof BinaryExpr) {
-                                        if (argument.toString().equals("0")) {
+                                        if (argument.toString().equals("1")) {
                                             targetExpression = ((BinaryExpr) targetExpression).getLeft();
-                                        } else if (argument.toString().equals("1")) {
+                                        } else if (argument.toString().equals("2")) {
                                             targetExpression = ((BinaryExpr) targetExpression).getRight();
                                         }
                                     }
@@ -234,9 +234,9 @@ public class InlineTest {
                                 List<Expression> arguments = ((MethodCallExpr) expression).getArguments();
                                 for (Expression argument : arguments) {
                                     if (targetExpression instanceof BinaryExpr) {
-                                        if (argument.toString().equals("0")) {
+                                        if (argument.toString().equals("1")) {
                                             targetExpression = ((BinaryExpr) targetExpression).getLeft();
-                                        } else if (argument.toString().equals("1")) {
+                                        } else if (argument.toString().equals("2")) {
                                             targetExpression = ((BinaryExpr) targetExpression).getRight();
                                         }
                                     }
