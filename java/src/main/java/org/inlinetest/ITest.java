@@ -39,6 +39,10 @@ public class ITest {
         return true;
     }
 
+    public static boolean group(int... args) {
+        return true;
+    }
+
     public ITest expect(Object value) {
         return itest;
     }

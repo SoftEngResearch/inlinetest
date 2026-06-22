@@ -28,6 +28,7 @@ import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.ClassExpr;
 import com.github.javaparser.ast.expr.NullLiteralExpr;
+import com.github.javaparser.ast.expr.BinaryExpr;
 
 public class InlineTest {
     public String testName;
@@ -198,6 +199,18 @@ public class InlineTest {
                     Expression expression = assertStmt.getCheck();
                     if (expression instanceof MethodCallExpr) {
                         if (((MethodCallExpr) expression).getNameAsString().equals(Constant.GROUP)) {
+                            if (((MethodCallExpr) expression).getArguments().size() != 0) {
+                                List<Expression> arguments = ((MethodCallExpr) expression).getArguments();
+                                for (Expression argument : arguments) {
+                                    if (targetExpression instanceof BinaryExpr) {
+                                        if (argument.toString().equals("0")) {
+                                            targetExpression = ((BinaryExpr) targetExpression).getLeft();
+                                        } else if (argument.toString().equals("1")) {
+                                            targetExpression = ((BinaryExpr) targetExpression).getRight();
+                                        }
+                                    }
+                                }
+                            }
                             Statement builtAssertStmt = new ExpressionStmt(
                                     new MethodCallExpr().setName(Constant.ASSERT_TRUE).addArgument(targetExpression))
                                     .clone();
@@ -214,8 +227,21 @@ public class InlineTest {
                         // "The expression is not a group() call: " + expression.toString());
                         // }
                     } else if (expression instanceof UnaryExpr) {
-                        if (expression.toString().equals("!" + Constant.GROUP + "()")) {
+                        if (expression.toString().startsWith("!" + Constant.GROUP + "(")) {
                             // assertFalse(targetExpression);
+                            expression = ((UnaryExpr) expression).getExpression();
+                            if (((MethodCallExpr) expression).getArguments().size() != 0) {
+                                List<Expression> arguments = ((MethodCallExpr) expression).getArguments();
+                                for (Expression argument : arguments) {
+                                    if (targetExpression instanceof BinaryExpr) {
+                                        if (argument.toString().equals("0")) {
+                                            targetExpression = ((BinaryExpr) targetExpression).getLeft();
+                                        } else if (argument.toString().equals("1")) {
+                                            targetExpression = ((BinaryExpr) targetExpression).getRight();
+                                        }
+                                    }
+                                }
+                            }
                             Statement builtAssertStmt = new ExpressionStmt(
                                     new MethodCallExpr().setName(Constant.ASSERT_FALSE).addArgument(targetExpression))
                                     .clone();
